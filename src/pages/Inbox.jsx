@@ -4,7 +4,7 @@ import FriendsList from "./Sections/Inbox/FriendsList";
 function Inbox() {
   return (
     <div>
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-3 mb-[30px]">
         <div className="col-span-1 mx-auto mt-16">
           <FriendsList />
         </div>

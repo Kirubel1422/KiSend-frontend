@@ -11,14 +11,14 @@ function Hero() {
           />
         </div>
         <div className="flex flex-col gap-y-[20px]">
-          <p className="text-[24px] text-[#5F5858] leading-[28px] font-[600] md:w-[415px]">
+          <p className="text-[24px] text-[#5F5858] leading-[32px] font-[600] md:w-[415px]">
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
             commodo ligula eget dolor. Aenean massa. Cum sociis natoque
             penatibus et
           </p>
           <button
             type="button"
-            className="text-white bg-[#CA6680] text-[24px] font-[600] rounded-[25px] px-5 py-2 w-fit"
+            className="text-white bg-[#CA6680] text-[24px] font-[600] rounded-[25px] px-7 py-2 w-fit active:scale-90 transition-all duration-75 ease-in"
           >
             Start Chatting
           </button>

@@ -7,6 +7,8 @@ import Global from "./pages/Global";
 import MyFriends from "./pages/MyFriends";
 import Inbox from "./pages/Inbox";
 import Profile from "./pages/Profile";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/myFriends" element={<MyFriends />} />
           <Route path="/inbox" element={<Inbox />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
 

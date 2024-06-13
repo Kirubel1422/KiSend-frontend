@@ -2,6 +2,7 @@ import { Form, Formik, useField } from "formik";
 import { useState } from "react";
 import { maleAvatar, femaleAvatar } from "../assets";
 import { BiEdit } from "react-icons/bi";
+import { CancelBtn, UpdateBtn } from "../components/Buttons/Buttons";
 
 function Profile() {
   const [imgUrl, setImgUrl] = useState(null);
@@ -55,7 +56,7 @@ function Profile() {
           )
         ) : (
           <img
-            className="w-[102px] aspect-square rounded-full border border-[#CA6680]"
+            className="w-[102px] aspect-square rounded-full object-center object-cover objet-fixed border border-[#CA6680]"
             src={imgUrl}
           />
         )}
@@ -121,6 +122,7 @@ function Profile() {
                   value={formik.values.birthDate}
                 />
               </table>
+
               <table className="flex flex-col items-end gap-[23px]">
                 <Field
                   name="lastName"
@@ -162,6 +164,11 @@ function Profile() {
                   </td>
                 </tr>
               </table>
+
+              <div className="flex items-center gap-x-[20px] mt-[68px]">
+                <CancelBtn onClick={() => {}} />
+                <UpdateBtn onClick={() => {}} buttonName="Update" />
+              </div>
             </Form>
           )}
         </Formik>

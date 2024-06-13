@@ -1,4 +1,5 @@
 import PropType from "prop-types";
+import { PrimaryBtn } from "../Buttons/Buttons";
 
 function UserCard({ name, age, location, buttonName, profilePic, ...props }) {
   return (
@@ -16,12 +17,7 @@ function UserCard({ name, age, location, buttonName, profilePic, ...props }) {
       </div>
 
       <div className="flex justify-start">
-        <button
-          type="button"
-          className="bg-[#CA6680] text-white text-[18px] py-[5px] px-[35px] mt-[28px] mb-[20px] rounded-[25px]"
-        >
-          {buttonName}
-        </button>
+        <PrimaryBtn buttonName={buttonName} onClick={() => {}} />
       </div>
     </div>
   );
