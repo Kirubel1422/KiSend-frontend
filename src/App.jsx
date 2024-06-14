@@ -9,6 +9,7 @@ import Inbox from "./pages/Inbox";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import FriendRequests from "./pages/FriendRequests";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/friend-requests" element={<FriendRequests />} />
         </Routes>
       </main>
 

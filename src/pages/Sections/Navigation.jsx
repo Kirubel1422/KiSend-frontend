@@ -7,6 +7,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { TiUserOutline } from "react-icons/ti";
 import { SlLogout } from "react-icons/sl";
 import { RiUserLine } from "react-icons/ri";
+import { LiaUserFriendsSolid } from "react-icons/lia";
 
 function Navigation() {
   const [isOpen, setOpen] = useState(false); // For drop down
@@ -39,6 +40,20 @@ function Navigation() {
   }, [location.pathname]);
 
   const isLoggedIn = JSON.parse(localStorage.getItem("user"));
+
+  // For drop-down options
+  const dropDownItems = [
+    {
+      label: "Profile",
+      route: "/profile",
+      Icon: RiUserLine,
+    },
+    {
+      label: "Friend requests",
+      route: "/friend-requests",
+      Icon: LiaUserFriendsSolid,
+    },
+  ];
 
   return (
     <>
@@ -78,14 +93,20 @@ function Navigation() {
           {isOpen && (
             <div className="absolute -left-24 bg-[#FFFFFF] w-[180px] border-[#EDC79B] border rounded-[5px] z-50">
               <ul className="px-[12px] pt-[10px] pb-[16px]">
-                <li className="border-b border-[#EDC79B] pb-[10px]">
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-[15px] text-[#5F5858]"
+                {dropDownItems.map((item, index) => (
+                  <li
+                    key={index}
+                    className="border-b border-[#EDC79B] py-[10px]"
                   >
-                    <RiUserLine size={18} /> Profile
-                  </Link>
-                </li>
+                    <Link
+                      to={item.route}
+                      className="flex items-center gap-[15px] text-[#5F5858]"
+                    >
+                      <item.Icon size={18} /> {item.label}
+                    </Link>
+                  </li>
+                ))}
+
                 <li className="pt-[10px]">
                   <button className="flex items-center gap-[15px] text-[#5F5858]">
                     <SlLogout size={18} /> Logout
