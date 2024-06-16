@@ -10,7 +10,18 @@ export const AuthField = ({ label, ...props }) => {
       </label>
 
       <div className="relative">
-        <input className={StyleSheet.input} {...props} {...field} />
+        <input
+          className={
+            StyleSheet.input +
+            ` ${
+              props.error
+                ? " border-red-500 text-red-500 bg-red-50"
+                : " border-[#D0C2C2] text-[#5F5858] bg-white"
+            } `
+          }
+          {...props}
+          {...field}
+        />
         <props.Icon className={StyleSheet.icon} />
       </div>
 
@@ -24,7 +35,7 @@ export const AuthField = ({ label, ...props }) => {
 const StyleSheet = {
   label: "font-semibold text-[12px] text-[#5F5858] mb-[6px] ",
   input:
-    "w-full border border-[#D0C2C2] rounded-[25px] placeholder:text-[#B0A9A9] text-[14px] text-[#5F5858] py-[10px] pl-[32px] outline-none ",
+    "w-full border  rounded-[25px] placeholder:text-[#B0A9A9] text-[14px] py-[10px] pl-[32px] outline-none",
   icon: "absolute left-0 top-[30%] ml-[10px] opacity-70",
   error: "text-xs text-red-500 mt-[4px]",
 };

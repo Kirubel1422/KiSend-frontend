@@ -1,12 +1,36 @@
 import { Form, Formik, useField } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { maleAvatar, femaleAvatar } from "../assets";
 import { BiEdit } from "react-icons/bi";
 import { CancelBtn, UpdateBtn } from "../components/Buttons/Buttons";
+import { Loading } from "../components/State";
 
 function Profile() {
   const [imgUrl, setImgUrl] = useState(null);
-  const gender = "female"; // Should be dynamic
+  const [profileData, setProfileData] = useState({});
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        city: user?.city,
+        phone: user?.phone,
+        country: user?.country,
+        birthDate: user?.birthDate,
+        gender: user?.gender,
+        profilePicture: user?.profilePicture,
+      });
+    }
+  }, []);
+
+  // Show loading
+  if (!user.email && !!user) {
+    return <Loading />;
+  }
 
   const Field = ({ label, ...props }) => {
     const [field, meta] = useField(props);
@@ -43,7 +67,7 @@ function Profile() {
     <div className="my-[100px]">
       <div className="max-w-3xl mx-auto flex items-center gap-[43px] mb-[45px]">
         {imgUrl === null ? (
-          gender === "female" ? (
+          profileData?.gender === "female" ? (
             <img
               className="w-[102px] aspect-square rounded-full border border-[#CA6680]"
               src={femaleAvatar}
@@ -78,19 +102,7 @@ function Profile() {
         </button>
       </div>
       <div className="flex flex-col items-center">
-        <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            city: "",
-            phone: "",
-            country: "",
-            birthDate: "",
-            gender: "",
-            profilePicture: "",
-          }}
-        >
+        <Formik initialValues={profileData}>
           {(formik) => (
             <Form className="grid grid-cols-2 gap-x-[38px]">
               <table className="flex flex-col items-end gap-[23px]">
@@ -155,9 +167,7 @@ function Profile() {
                       className="outline-none h-[47px] w-full bg-white ml-[25px] rounded-[21px] text-[#5f5858] border border-[#5f5858] text-lg placeholder:text-[#5f5858] py-[12px] pl-[22px]"
                       name="gender"
                     >
-                      <option value="" disabled>
-                        Choose
-                      </option>
+                      <option value="">Choose</option>
                       <option value="female">Female</option>
                       <option value="male">Male</option>
                     </select>

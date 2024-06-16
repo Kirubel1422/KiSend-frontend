@@ -1,14 +1,35 @@
-import { LuSend } from "react-icons/lu";
 import { googleIcon, twitterIcon } from "../assets";
 import { Formik, Form } from "formik";
-import { login } from "../constants/validations";
+import { loginSchema } from "../constants/validations";
 import { AuthField } from "../components/Input/Form";
 import { AiOutlineMail } from "react-icons/ai";
 import { BsLock } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../api/authSlice";
+import { AlertSuccess, AlertError } from "../utils/alert";
+import { loginAction } from "../app/features/authFeature";
+import { useDispatch } from "react-redux";
+import { ThreeDots } from "react-loader-spinner";
 
 function Login() {
+  const dispatch = useDispatch(); // for dispatching actions
   const navigate = useNavigate(); // for routing purposes
+  const [login, { isLoading, isError }] = useLoginMutation();
+
+  // For handling login
+  const handleLogin = async (values) => {
+    try {
+      const data = await login(values).unwrap();
+
+      dispatch(loginAction(data)); // Set cache
+      AlertSuccess("Welcome!");
+      navigate("/global");
+    } catch (error) {
+      AlertError(error?.data.message);
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center py-10">
       <div
@@ -54,8 +75,8 @@ function Login() {
               email: "",
               password: "",
             }}
-            validationSchema={login}
-            onSubmit={(values) => alert(JSON.stringify(values))}
+            validationSchema={loginSchema}
+            onSubmit={handleLogin}
           >
             {(formik) => (
               <Form className="flex flex-col gap-[23px]">
@@ -66,6 +87,7 @@ function Login() {
                     value={formik.values.email}
                     type="email"
                     placeholder="Enter email address"
+                    error={isError}
                     Icon={AiOutlineMail}
                   />
                 </div>
@@ -77,16 +99,28 @@ function Login() {
                     value={formik.values.password}
                     type="password"
                     placeholder="Enter your password"
+                    error={isError}
                     Icon={BsLock}
                   />
                 </div>
 
                 <div className="mt-[20px] flex flex-col gap-[14px]">
-                  <input
+                  <button
+                    disabled={isLoading}
                     type="submit"
-                    value={"Login"}
-                    className="w-full rounded-[25px] bg-[#CA6680] text-white py-[8px] cursor-pointer"
-                  />
+                    onClick={formik.handleSubmit}
+                    className="w-full h-[43px] rounded-[25px] bg-[#CA6680] text-white py-[8px] cursor-pointer flex justify-center items-center"
+                  >
+                    <>
+                      {isLoading ? (
+                        <>
+                          <ThreeDots height="10" width="40" color="white" />
+                        </>
+                      ) : (
+                        <>Login</>
+                      )}
+                    </>
+                  </button>
 
                   <button
                     onClick={() => navigate("/signup")}

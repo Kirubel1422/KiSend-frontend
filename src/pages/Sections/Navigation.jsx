@@ -4,12 +4,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoSendOutline } from "react-icons/io5";
 import { femaleAvatar } from "../../assets";
 import { FaCaretDown } from "react-icons/fa";
-import { TiUserOutline } from "react-icons/ti";
 import { SlLogout } from "react-icons/sl";
 import { RiUserLine } from "react-icons/ri";
 import { LiaUserFriendsSolid } from "react-icons/lia";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "../../app/features/authFeature";
 
 function Navigation() {
+  const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [isOpen, setOpen] = useState(false); // For drop down
   const [links, setLinks] = useState({
     home: false,
@@ -39,8 +43,6 @@ function Navigation() {
     });
   }, [location.pathname]);
 
-  const isLoggedIn = JSON.parse(localStorage.getItem("user"));
-
   // For drop-down options
   const dropDownItems = [
     {
@@ -54,6 +56,12 @@ function Navigation() {
       Icon: LiaUserFriendsSolid,
     },
   ];
+
+  // handle logout
+  function handleLogout() {
+    dispatch(logoutAction());
+    navigate("/");
+  }
 
   return (
     <>
@@ -74,7 +82,7 @@ function Navigation() {
         </ul>
       </div>
 
-      {!!isLoggedIn ? (
+      {!!user ? (
         <div className="relative">
           <button
             type="button"
@@ -108,7 +116,10 @@ function Navigation() {
                 ))}
 
                 <li className="pt-[10px]">
-                  <button className="flex items-center gap-[15px] text-[#5F5858]">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-[15px] text-[#5F5858]"
+                  >
                     <SlLogout size={18} /> Logout
                   </button>
                 </li>

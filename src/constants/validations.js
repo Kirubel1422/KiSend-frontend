@@ -1,6 +1,6 @@
 import { object, ref, string } from "yup";
 
-export const signUp = object({
+export const signUpSchema = object({
   firstName: string()
     .required("First Name is required")
     .min(3, "Minimum number of characters should be 3")
@@ -21,7 +21,7 @@ export const signUp = object({
     .oneOf([ref("password")], "Passwords do not match"),
 });
 
-export const login = object({
+export const loginSchema = object({
   email: string().required("Email is required").email("Not valid email."),
   password: string()
     .required("Password is required")
