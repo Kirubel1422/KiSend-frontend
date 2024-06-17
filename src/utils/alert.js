@@ -17,3 +17,11 @@ export const AlertError = (message) => {
     icon: "error",
   });
 };
+
+export const AlertInfo = (message) => {
+  Swal.fire({
+    title: message,
+    showConfirmButton: true,
+    icon: "info",
+  });
+};

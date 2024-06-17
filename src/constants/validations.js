@@ -30,3 +30,14 @@ export const loginSchema = object({
     .matches(/[A-Z]/, "Must contain at least one uppercase letter")
     .matches(/(\W)/, "Must contain at least one special character"),
 });
+
+export const profileSchema = object({
+  email: string().required("Required *").email(),
+  firstName: string().required("Required *"),
+  lastName: string().required("Required *"),
+  birthDate: string(),
+  profilePicture: string(),
+  city: string(),
+  town: string(),
+  phone: string(),
+});

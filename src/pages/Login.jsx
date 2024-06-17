@@ -9,7 +9,7 @@ import { useLoginMutation } from "../api/authSlice";
 import { AlertSuccess, AlertError } from "../utils/alert";
 import { loginAction } from "../app/features/authFeature";
 import { useDispatch } from "react-redux";
-import { ThreeDots } from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
 
 function Login() {
   const dispatch = useDispatch(); // for dispatching actions
@@ -113,9 +113,10 @@ function Login() {
                   >
                     <>
                       {isLoading ? (
-                        <>
-                          <ThreeDots height="10" width="40" color="white" />
-                        </>
+                        <span className="flex items-center gap-[5px]">
+                          <TailSpin height="25" width="30" color="white" />{" "}
+                          Loging in
+                        </span>
                       ) : (
                         <>Login</>
                       )}

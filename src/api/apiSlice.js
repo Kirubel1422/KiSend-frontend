@@ -6,6 +6,14 @@ export const KiSendAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: API_ENDPOINT + "api/" }),
   tagTypes: ["Global", "Friends"],
   endpoints: (builder) => ({
+    // Update user profile
+    updateProfile: builder.mutation({
+      query: (body) => ({
+        method: "PATCH",
+        body,
+        url: "updateProfile",
+      }),
+    }),
     // Fetch all users
     getGlobalUsers: builder.query({
       query: () => "getGlobalUsers",
@@ -20,4 +28,8 @@ export const KiSendAPI = createApi({
   }),
 });
 
-export const { useGetFriendsQuery, useGetGlobalUsersQuery } = KiSendAPI;
+export const {
+  useGetFriendsQuery,
+  useGetGlobalUsersQuery,
+  useUpdateProfileMutation,
+} = KiSendAPI;

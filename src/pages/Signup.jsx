@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AlertError, AlertSuccess } from "../utils/alert";
 import { useSignupMutation } from "../api/authSlice";
-import { ThreeDots } from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
 
 function Signup() {
   const navigate = useNavigate(); // for navigation
@@ -143,9 +143,10 @@ function Signup() {
                   >
                     <>
                       {isLoading ? (
-                        <>
-                          <ThreeDots height="10" width="40" color="white" />
-                        </>
+                        <span className="flex items-center gap-[5px]">
+                          <TailSpin height="25" width="30" color="white" />{" "}
+                          Signing up
+                        </span>
                       ) : (
                         <> Sign up</>
                       )}

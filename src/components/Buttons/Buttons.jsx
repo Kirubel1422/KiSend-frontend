@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { TailSpin } from "react-loader-spinner";
 
 export const PrimaryBtn = ({ buttonName, onClick }) => {
   return (
@@ -12,14 +13,23 @@ export const PrimaryBtn = ({ buttonName, onClick }) => {
   );
 };
 
-export const UpdateBtn = ({ buttonName, onClick }) => {
+export const UpdateBtn = ({ onClick, ...props }) => {
   return (
     <button
       type="button"
-      className="bg-[#CA6680] boder border-transparent text-white text-lg w-[140px] flex items-center justify-center rounded-[25px] h-[32px]"
+      className="bg-[#CA6680] boder border-transparent text-white text-lg w-[175px]  flex items-center justify-center rounded-[5px]  h-[42px]"
       onClick={onClick}
+      {...props}
     >
-      {buttonName}
+      <>
+        {props?.disabled ? (
+          <span className="flex items-center gap-[5px]">
+            <TailSpin height="25" width="30" color="white" /> Updating
+          </span>
+        ) : (
+          <>Update</>
+        )}
+      </>
     </button>
   );
 };
@@ -28,7 +38,7 @@ export const CancelBtn = ({ onClick }) => {
   return (
     <button
       type="button"
-      className="border border-[#CA6680] text-[#5F5858] text-lg  w-[140px] flex items-center justify-center rounded-[25px]  h-[32px]"
+      className="bg-[#E3E3E3] text-[#5F5858] text-lg  w-[175px] flex items-center justify-center rounded-[5px]  h-[42px]"
       onClick={onClick}
     >
       Cancel
