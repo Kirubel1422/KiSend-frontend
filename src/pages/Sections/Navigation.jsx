@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 import NavLink from "../../components/Navigation/NavLink";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoSendOutline } from "react-icons/io5";
-import { femaleAvatar } from "../../assets";
+import { femaleAvatar, maleAvatar, neutral } from "../../assets";
 import { FaCaretDown } from "react-icons/fa";
 import { SlLogout } from "react-icons/sl";
 import { RiUserLine } from "react-icons/ri";
 import { LiaUserFriendsSolid } from "react-icons/lia";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../app/features/authFeature";
+import { API_ENDPOINT } from "../../constants/basic";
 
 function Navigation() {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
+  const [avatar, setAvatarImg] = useState("");
 
   const [isOpen, setOpen] = useState(false); // For drop down
   const [links, setLinks] = useState({
@@ -63,6 +65,17 @@ function Navigation() {
     navigate("/");
   }
 
+  useEffect(() => {
+    setAvatarImg(setAvatar(user.gender));
+  }, []);
+
+  // For setting avatar
+  const setAvatar = (gender) => {
+    if (gender == "") return neutral;
+    else if (gender == "male") return maleAvatar;
+    else return femaleAvatar;
+  };
+
   return (
     <>
       <div className="flex items-center gap-[50px] md:gap-[75px]">
@@ -89,10 +102,18 @@ function Navigation() {
             className="relative"
             onClick={() => setOpen((prev) => !prev)}
           >
-            <img
-              src={femaleAvatar}
-              className="w-[65px] aspect-square rounded-full border-[2px] border-[#CA6680] "
-            />
+            {user.profilePicture ? (
+              <img
+                crossOrigin="anonymous"
+                src={API_ENDPOINT + "image" + user.profilePicture}
+                className="w-[65px] aspect-square object-cover object-center object-fixed rounded-full border-[2px] border-[#5F5858] border-opacity-40"
+              />
+            ) : (
+              <img
+                src={avatar}
+                className="w-[65px] aspect-square rounded-full border-[2px] border-[#5F5858] border-opacity-40"
+              />
+            )}
             <FaCaretDown
               className="absolute top-[50%] -right-6 text-[#5F5858]"
               size={25}

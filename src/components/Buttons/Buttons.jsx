@@ -17,7 +17,7 @@ export const UpdateBtn = ({ onClick, ...props }) => {
   return (
     <button
       type="button"
-      className="bg-[#CA6680] boder border-transparent text-white text-lg w-[175px]  flex items-center justify-center rounded-[5px]  h-[42px]"
+      className="bg-[#c94d6e] boder border-transparent text-white text-lg w-[175px]  flex items-center justify-center rounded-[5px]  h-[42px]"
       onClick={onClick}
       {...props}
     >
@@ -38,7 +38,7 @@ export const CancelBtn = ({ onClick }) => {
   return (
     <button
       type="button"
-      className="bg-[#E3E3E3] text-[#5F5858] text-lg  w-[175px] flex items-center justify-center rounded-[5px]  h-[42px]"
+      className="bg-neutral-300 text-[#5F5858] text-lg  w-[175px] flex items-center justify-center rounded-[5px]  h-[42px]"
       onClick={onClick}
     >
       Cancel

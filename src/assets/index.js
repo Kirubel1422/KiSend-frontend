@@ -5,3 +5,4 @@ export { default as maleAvatar } from "./maleAvatar.svg";
 export { default as googleIcon } from "./icons8-google.svg";
 export { default as twitterIcon } from "./icons8-twitter.svg";
 export { default as noResults } from "./no-results.png";
+export { default as neutral } from "./neutral-avatar.svg";

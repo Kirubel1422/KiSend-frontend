@@ -1,6 +1,6 @@
 import { Form, Formik, useField } from "formik";
 import { useEffect, useState } from "react";
-import { maleAvatar, femaleAvatar } from "../assets";
+import { maleAvatar, femaleAvatar, neutral } from "../assets";
 import { BiEdit } from "react-icons/bi";
 import { CancelBtn, UpdateBtn } from "../components/Buttons/Buttons";
 import { Loading } from "../components/State";
@@ -9,18 +9,36 @@ import { Country, City } from "country-state-city";
 import MuiPhoneNumber from "material-ui-phone-number";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import { formatStandard } from "../utils/timeData";
 import { useUpdateProfileMutation } from "../api/apiSlice";
 import { useDispatch } from "react-redux";
 import { AlertError, AlertInfo, AlertSuccess } from "../utils/alert";
 import { updateProfileAction } from "../app/features/authFeature";
+import { API_ENDPOINT } from "../constants/basic";
+import dayjs from "dayjs";
 
 function Profile() {
   const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
   const [imgUrl, setImgUrl] = useState(null);
+  const [avatar, setAvatarImg] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const setAvatar = (gender) => {
+    if (user.profilePicture) {
+      return API_ENDPOINT + "image" + user.profilePicture;
+    }
+
+    if (gender == "") return neutral;
+    else if (gender == "male") return maleAvatar;
+    else return femaleAvatar;
+  };
+
+  useEffect(() => {
+    if (user) {
+      setAvatarImg(setAvatar(user.gender));
+    }
+  }, []);
 
   // Handle Country options
   useEffect(() => {
@@ -52,7 +70,7 @@ function Profile() {
     return (
       <tr>
         <th align="left" htmlFor={props.name}>
-          <label htmlFor={props.name} className="text-[#858585] text-lg ">
+          <label htmlFor={props.name} className="text-[#5a5a5a] text-lg ">
             {label}
           </label>
         </th>
@@ -76,7 +94,7 @@ function Profile() {
     return (
       <tr>
         <th>
-          <label htmlFor={props.name} className="text-[#858585] text-lg ">
+          <label htmlFor={props.name} className="text-[#5a5a5a] text-lg ">
             {label}
           </label>
         </th>
@@ -117,7 +135,9 @@ function Profile() {
     if (!value) return [];
 
     // Extract iso-code
-    const isoCode = countries.find((country) => country.value == value).isoCode;
+    const isoCode = countries.find(
+      (country) => country.value == value
+    )?.isoCode;
 
     // Fetch cities
     const fetchedCities = City.getCitiesOfCountry(isoCode);
@@ -174,45 +194,41 @@ function Profile() {
     });
 
     try {
-      const response = await updateProfile(formData);
+      const response = await updateProfile(formData).unwrap();
 
-      if (isSuccess) {
+      if (response.user) {
         AlertSuccess("Successfully Updated Profile!");
         // dispatch action
-        dispatch(updateProfileAction(response.data.user));
-      }
-
-      if (response.error.status === "FETCH_ERROR") {
-        AlertInfo("Make sure you are connected to internet.");
+        dispatch(updateProfileAction(response.user));
       }
     } catch (error) {
       console.log("error while updating profile \n", error);
-      AlertError(error.response.data.message || "Something went wrong!");
+      if (error.status === "FETCH_ERROR") {
+        AlertError(error.error);
+        return;
+      }
+      AlertError(error.data?.message || "Something went wrong!");
     }
   }
 
   return (
     <div className="my-[100px]">
       <div className="max-w-3xl mx-auto flex items-center gap-[43px] mb-[45px]">
-        {imgUrl === null ? (
-          user.gender === "female" ? (
-            <img
-              className="w-[102px] aspect-square rounded-full border border-[#CA6680]"
-              src={femaleAvatar}
-            />
-          ) : (
-            <img
-              className="w-[102px] aspect-square rounded-full border border-[#CA6680]"
-              src={maleAvatar}
-            />
-          )
-        ) : (
+        {imgUrl == null ? (
           <img
-            className="w-[102px] aspect-square rounded-full object-center object-cover objet-fixed border border-[#CA6680]"
-            src={imgUrl}
+            alt={"Profile Picture"}
+            className="w-[102px] aspect-square object-cover object-fixed object-center rounded-full border border-opacity-40 border-[#CA6680]"
+            src={avatar}
+            crossOrigin="anonymous"
           />
+        ) : (
+          <>
+            <img
+              className="w-[102px] aspect-square rounded-full object-center object-cover objet-fixed border border-[#CA6680]"
+              src={imgUrl}
+            />
+          </>
         )}
-
         <button
           type="button"
           className="relative border text-[#5F5858] text-lg rounded-[5px] py-[7px] px-[10px] border-[#CCC2C2]"
@@ -240,7 +256,7 @@ function Profile() {
             city: user?.city,
             phone: user?.phone,
             country: user?.country,
-            birthDate: user?.birthDate,
+            birthDate: user?.dateOfBirth,
             gender: user?.gender,
           }}
           validationSchema={profileSchema}
@@ -268,7 +284,7 @@ function Profile() {
                 <div className="flex items-center gap-[25px]">
                   <label
                     htmlFor={"phone"}
-                    className="text-[#858585] text-lg font-bold"
+                    className="text-[#5a5a5a] text-lg font-bold"
                   >
                     Phone:
                   </label>
@@ -297,7 +313,7 @@ function Profile() {
                   <div className="flex items-center gap-[25px]">
                     <label
                       htmlFor={"birthDate"}
-                      className="text-[#858585] text-lg font-bold"
+                      className="text-[#5a5a5a] text-lg font-bold"
                     >
                       Birth Date:
                     </label>
@@ -305,6 +321,7 @@ function Profile() {
                       <DatePicker
                         name="birthDate"
                         className="!hover:bg-white  md:w-[260px]  h-[47px] ml-[25px] !rounded-[8px]"
+                        value={dayjs(formik.values.birthDate)}
                         onChange={(e) => handleBirthDate(e, formik)}
                         sx={StyleSheet.MUIStyle}
                       />
@@ -345,14 +362,15 @@ function Profile() {
 
                 <tr>
                   <th align="left">
-                    <span className="text-[#858585] text-lg">Gender</span>
+                    <span className="text-[#5a5a5a] text-lg">Gender</span>
                   </th>
 
                   <td>
                     <select
                       onChange={(e) => handleGender(e, formik)}
-                      className="outline-none h-[47px] md:w-[260px] bg-white ml-[25px] rounded-[8px] text-[#5f5858] border border-[#E6E6E6] text-lg placeholder:text-[#5f5858] py-[12px] pl-[22px]"
+                      className="outline-none h-[47px] md:w-[260px] bg-white ml-[25px] rounded-[8px] text-[#5a5a5a] border border-[#E6E6E6] text-lg placeholder:text-[#5f5858] py-[12px] pl-[10px]"
                       name="gender"
+                      value={formik.values.gender}
                     >
                       <option value="">Choose</option>
                       <option value="female">Female</option>

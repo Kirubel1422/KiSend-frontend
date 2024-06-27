@@ -6,7 +6,6 @@ import { HiOutlineUser } from "react-icons/hi";
 import { AiOutlineMail } from "react-icons/ai";
 import { BsLock } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { AlertError, AlertSuccess } from "../utils/alert";
 import { useSignupMutation } from "../api/authSlice";
 import { TailSpin } from "react-loader-spinner";
@@ -15,17 +14,16 @@ function Signup() {
   const navigate = useNavigate(); // for navigation
 
   // Extracting mutation actions
-  const [signup, { isLoading }] = useSignupMutation();
+  const [signup, { isLoading, error: mutationError }] = useSignupMutation();
 
   // handle sign-up
   const handleSignUp = async (values) => {
     try {
-      const response = await signup(values);
+      const response = await signup(values).unwrap();
       AlertSuccess(response.data.message);
       navigate("/login");
     } catch (error) {
-      AlertError(error?.data.message || null);
-      console.log(error);
+      AlertError(mutationError.data.message || null);
     }
   };
 
