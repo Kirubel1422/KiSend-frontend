@@ -217,7 +217,7 @@ function Profile() {
         {imgUrl == null ? (
           <img
             alt={"Profile Picture"}
-            className="w-[102px] aspect-square object-cover object-fixed object-center rounded-full border border-opacity-40 border-[#CA6680]"
+            className="w-[102px] text-center items-center flex justify-center h-full aspect-square object-cover object-fixed object-center rounded-full border border-opacity-40 border-[#CA6680]"
             src={avatar}
             crossOrigin="anonymous"
           />

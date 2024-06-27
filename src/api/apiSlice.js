@@ -30,7 +30,21 @@ export const KiSendAPI = createApi({
       query: () => "getFriends",
       providesTags: ["Friends"],
     }),
-    // Here add mutation queries
+    // Get single user
+    getFriend: builder.query({
+      query: (userId) => ({
+        url: `getFriend/${userId}`,
+      }),
+      providesTags: (result, error, userId) => [{ ...result, userId }],
+    }),
+    // Here add friend mutation queries
+    addFriend: builder.mutation({
+      query: (userId) => ({
+        url: `addFriend/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: (result, error, userId) => [{ ...result, userId }],
+    }),
   }),
 });
 
@@ -38,4 +52,5 @@ export const {
   useGetFriendsQuery,
   useGetGlobalUsersQuery,
   useUpdateProfileMutation,
+  useAddFriendMutation,
 } = KiSendAPI;
