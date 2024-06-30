@@ -20,12 +20,11 @@ function Login() {
   const handleLogin = async (values) => {
     try {
       const data = await login(values).unwrap();
-
       dispatch(loginAction(data)); // Set cache
       AlertSuccess("Welcome!");
       navigate("/global");
     } catch (error) {
-      AlertError(error?.data.message);
+      AlertError(error.data.message);
       console.log(error);
     }
   };

@@ -10,7 +10,7 @@ export const KiSendAPI = createApi({
       return withToken(headers);
     },
   }),
-  tagTypes: ["Global", "Friends"],
+  tagTypes: ["Global", "Friends", "Friend"],
   endpoints: (builder) => ({
     // Update user profile
     updateProfile: builder.mutation({
@@ -23,19 +23,31 @@ export const KiSendAPI = createApi({
     // Fetch all users
     getGlobalUsers: builder.query({
       query: () => "getGlobalUsers",
-      providesTags: ["Global"],
+      providesTags: (returnValue, args) => {
+        return [
+          { type: "Global", id: "GlobalFriendsList" },
+          ...returnValue.users.map((user) => ({
+            type: "Global",
+            id: user.id,
+          })),
+        ];
+      },
     }),
     // Fetching friends only
     getFriends: builder.query({
       query: () => "getFriends",
-      providesTags: ["Friends"],
+      providesTags: (returnValue, args) => [
+        ...returnValue.users.map((user) => ({ type: "Friends", id: user.id })),
+      ],
     }),
     // Get single user
     getFriend: builder.query({
       query: (userId) => ({
         url: `getFriend/${userId}`,
       }),
-      providesTags: (result, error, userId) => [{ ...result, userId }],
+      providesTags: (returnValue, args) => [
+        { type: "Friend", id: returnValue.user.id },
+      ],
     }),
     // Here add friend mutation queries
     addFriend: builder.mutation({
@@ -43,7 +55,7 @@ export const KiSendAPI = createApi({
         url: `addFriend/${userId}`,
         method: "PATCH",
       }),
-      invalidatesTags: (result, error, userId) => [{ ...result, userId }],
+      invalidatesTags: (returnValue, args) => [{ type: "Friend", id: args }],
     }),
   }),
 });

@@ -14,7 +14,7 @@ function Signup() {
   const navigate = useNavigate(); // for navigation
 
   // Extracting mutation actions
-  const [signup, { isLoading, error: mutationError }] = useSignupMutation();
+  const [signup, { isLoading }] = useSignupMutation();
 
   // handle sign-up
   const handleSignUp = async (values) => {
@@ -23,7 +23,8 @@ function Signup() {
       AlertSuccess(response.data.message);
       navigate("/login");
     } catch (error) {
-      AlertError(mutationError.data.message || null);
+      AlertError(error.data.message || null);
+      console.log(error);
     }
   };
 

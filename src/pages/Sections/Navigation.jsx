@@ -66,7 +66,7 @@ function Navigation() {
   }
 
   useEffect(() => {
-    setAvatarImg(setAvatar(user.gender));
+    setAvatarImg(setAvatar(user?.gender));
   }, []);
 
   // For setting avatar
