@@ -22,6 +22,9 @@ function Global() {
   // Apply RTK-Query
   const { data, isFetching } = useGetGlobalUsersQuery();
 
+  // User from localStorage
+  const user = localStorage.getItem("user");
+
   useEffect(() => {
     if (data) {
       setUsers(data.users);
@@ -59,6 +62,7 @@ function Global() {
             buttonName={"Add Friend"}
             id={item.id}
             key={index}
+            following={item.following?.includes(user.id)}
           />
         ))}
       </>

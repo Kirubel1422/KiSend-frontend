@@ -20,7 +20,7 @@ function Signup() {
   const handleSignUp = async (values) => {
     try {
       const response = await signup(values).unwrap();
-      AlertSuccess(response.data.message);
+      AlertSuccess(response.message);
       navigate("/login");
     } catch (error) {
       AlertError(error.data.message || null);

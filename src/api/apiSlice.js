@@ -10,7 +10,7 @@ export const KiSendAPI = createApi({
       return withToken(headers);
     },
   }),
-  tagTypes: ["Global", "Friends", "Friend"],
+  tagTypes: ["Global", "Friends", "Friend", "Followers"],
   endpoints: (builder) => ({
     // Update user profile
     updateProfile: builder.mutation({
@@ -23,7 +23,7 @@ export const KiSendAPI = createApi({
     // Fetch all users
     getGlobalUsers: builder.query({
       query: () => "getGlobalUsers",
-      providesTags: (returnValue, args) => {
+      providesTags: (returnValue, err, args) => {
         return [
           { type: "Global", id: "GlobalFriendsList" },
           ...returnValue.users.map((user) => ({
@@ -36,7 +36,7 @@ export const KiSendAPI = createApi({
     // Fetching friends only
     getFriends: builder.query({
       query: () => "getFriends",
-      providesTags: (returnValue, args) => [
+      providesTags: (returnValue, err, args) => [
         ...returnValue.users.map((user) => ({ type: "Friends", id: user.id })),
       ],
     }),
@@ -45,17 +45,31 @@ export const KiSendAPI = createApi({
       query: (userId) => ({
         url: `getFriend/${userId}`,
       }),
-      providesTags: (returnValue, args) => [
-        { type: "Friend", id: returnValue.user.id },
-      ],
+      providesTags: (returnValue, err, args) => [{ type: "Friend", id: args }],
     }),
-    // Here add friend mutation queries
+    // Here add friend mutation queries - follow User
     addFriend: builder.mutation({
       query: (userId) => ({
-        url: `addFriend/${userId}`,
-        method: "PATCH",
+        url: `followUser/${userId}`,
+        method: "POST",
       }),
-      invalidatesTags: (returnValue, args) => [{ type: "Friend", id: args }],
+      invalidatesTags: () => {
+        return [{ type: "Global", id: "GlobalFriendsList" }];
+      },
+    }),
+
+    // Get all followers
+    getAllFollowers: builder.query({
+      query: () => ({
+        url: `getAllFollowers`,
+        method: "GET",
+      }),
+      providesTags: (returnValue, err, args) => [
+        ...returnValue.followers.map((item) => ({
+          type: "Followers",
+          id: item.id,
+        })),
+      ],
     }),
   }),
 });
@@ -65,4 +79,5 @@ export const {
   useGetGlobalUsersQuery,
   useUpdateProfileMutation,
   useAddFriendMutation,
+  useGetAllFollowersQuery,
 } = KiSendAPI;
